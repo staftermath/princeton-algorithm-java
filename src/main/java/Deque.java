@@ -1,8 +1,8 @@
 public class Deque {
     private int size = 0;
-    private int[] arr = new int[4];
-    private int head = 1;
-    private int tail = this.size+this.head;
+    int[] arr = new int[4];
+    int head = 1;
+    int tail = this.size+this.head;
 
     public Deque() {}
 
