@@ -36,7 +36,7 @@ public class Percolation {
 
     private void connect(int x, int y) {
         try {
-            if (this.isFilled(x) && this.isFilled(y) && !this.union_find.isConnected(x, y)) {
+            if (this.isFilled(x) && this.isFilled(y) && !this.union_find.connected(x, y)) {
                 this.union_find.union(x, y);
             }
         }
@@ -74,7 +74,7 @@ public class Percolation {
     public boolean isConnected(int x, int y) {
         if ((x == this.top || x == this.bottom || this.isFilled(x)) &&
             (y == this.top || y == this.bottom || this.isFilled(y)))
-            return this.union_find.isConnected(x, y);
+            return this.union_find.connected(x, y);
         else return false;
     }
 

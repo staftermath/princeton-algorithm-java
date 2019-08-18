@@ -3,40 +3,24 @@ import org.junit.Test;
 
 public class UnionFindTests {
     @Test
-    public void testGetIndex() {
-        int length = 5;
-        UnionFind union_find = new UnionFind(length);
-        for (int i=0; i<length; i ++) {
-            Assert.assertEquals(union_find.getIndex(i), i);
-        }
-    }
-
-    @Test
-    public void testUnion() {
+    public void testUnionIsConnected() {
         int length = 7;
         UnionFind union_find = new UnionFind(length);
+        Assert.assertFalse(union_find.connected(1, 3));
+        Assert.assertFalse(union_find.connected(3, 6));
         union_find.union(1,3);
-        Assert.assertEquals(union_find.getIndex(1), 3);
+        Assert.assertTrue(union_find.connected(1, 3));
     }
 
     @Test
-    public void testIsConnected() {
-        int length = 7;
-        UnionFind union_find = new UnionFind(length);
-        Assert.assertFalse(union_find.isConnected(1, 3));
-        Assert.assertFalse(union_find.isConnected(3, 6));
-        union_find.union(1,3);
-        Assert.assertTrue(union_find.isConnected(1, 3));
-    }
-
-    @Test
-    public void testRoot() {
+    public void testCounts() {
         int length = 6;
         UnionFind union_find = new UnionFind(length);
-        Assert.assertEquals(union_find.root(3), 3);
+        Assert.assertEquals(union_find.counts(), 6);
         union_find.union(4,5);
-        union_find.union(3,4);
-        Assert.assertEquals(union_find.root(3), 5);
-        Assert.assertEquals(union_find.root(4), 5);
+        union_find.union(1,4);
+        Assert.assertEquals(union_find.counts(), 4);
+        union_find.union(1, 5);
+        Assert.assertEquals(union_find.counts(), 4);
     }
 }
