@@ -1,5 +1,8 @@
 import cucumber.api.java.it.Ma;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Board {
     int[][] tiles = null;
     Board(int[][] tiles) {
@@ -51,14 +54,68 @@ public class Board {
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        if (this == obj) return true;
+        if (this.getClass() != obj.getClass()) return false;
+        Board o = (Board) obj;
+        return Arrays.deepEquals(this.tiles, o.tiles);
     }
 
-//    public Iterable<Board> neighbors() {}
+    public Iterable<Board> neighbors() {
+        ArrayList<Board> list = new ArrayList<Board>();
+        int indexOfZero = this.getIndexOfZero();
+        int row = indexOfZero/this.tiles.length;
+        int col = indexOfZero%this.tiles.length;
+        if (col != 0) {
+            int[][] leftNeighborTiles = Board.copy2DArray(this.tiles);
+            Board.swap(leftNeighborTiles, row, col, row, col-1);
+            list.add(new Board(leftNeighborTiles));
+        }
+        if (col+1 != this.tiles.length) {
+            int[][] rightNeighborTiles = Board.copy2DArray(this.tiles);
+            Board.swap(rightNeighborTiles, row, col, row, col+1);
+            list.add(new Board(rightNeighborTiles));
+        }
+        if (row != 0) {
+            int[][] upperNeighborTiles = Board.copy2DArray(this.tiles);
+            Board.swap(upperNeighborTiles, row, col, row-1, col);
+            list.add(new Board(upperNeighborTiles));
+        }
+        if (row+1 != this.tiles.length) {
+            int[][] lowerNeighborTiles = Board.copy2DArray(this.tiles);
+            Board.swap(lowerNeighborTiles, row, col, row+1, col);
+            list.add(new Board(lowerNeighborTiles));
+        }
+        return list;
+    }
 
     public boolean isSolvable() {return false;}
+
+    private int getIndexOfZero() {
+        int maxDistance = this.tiles.length*this.tiles.length;
+        for (int i=0; i<maxDistance; i++) {
+            if (this.tiles[i/this.tiles.length][i%this.tiles.length] == 0) return i;
+        }
+        return -1;
+    }
 
     public static void main(String[] args) {
 
     }
+
+    private static int[][] copy2DArray(int[][] arr) {
+        int height = arr.length;
+        int width = arr[1].length;
+        int[][] result = new int[height][width];
+        for (int i=0; i<height; i++) {
+            System.arraycopy(arr[i], 0, result[i], 0, width);
+        }
+        return result;
+    }
+
+    private static void swap(int[][] arr, int fromRow, int fromCol, int toRow, int toCol) {
+        int temp = arr[toRow][toCol];
+        arr[toRow][toCol] = arr[fromRow][fromCol];
+        arr[fromRow][fromCol] = temp;
+    }
+
 }
