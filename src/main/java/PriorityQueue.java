@@ -1,5 +1,5 @@
 
-public abstract class PriorityQueue {
+public abstract class PriorityQueue<T extends Comparable<T>> {
     int capacity;
     int n;
 
@@ -20,11 +20,11 @@ public abstract class PriorityQueue {
         return this.size() == 0;
     }
 
-    public abstract void insert(int x) throws QueueFullException ;
+    public abstract void insert(T x) throws QueueFullException ;
 
-    public abstract int top() throws QueueEmptyException;
+    public abstract T top() throws QueueEmptyException;
 
-    public abstract int popTop() throws QueueEmptyException ;
+    public abstract T popTop() throws QueueEmptyException ;
 
     public abstract boolean less(int i, int j);
 

@@ -1,24 +1,24 @@
 import java.util.Arrays;
 
-public class HeapSort {
-    int[] values = null;
+public class HeapSort<T extends Comparable> {
+    T[] values = null;
     public HeapSort(MaxPQ h) throws QueueEmptyException{
         if (h.isEmpty()) throw new QueueEmptyException();
-        values = new int[h.size()];
+        values = (T[]) new Comparable[h.size()];
         for (int i=0; i<values.length; i++) {
-            values[i] = h.popTop();
+            values[i] = (T) h.popTop();
         }
     }
 
-    public int[] topK(int k) {
+    public T[] topK(int k) {
         return Arrays.copyOfRange(this.values, 0, k);
     }
 
-    public int top() {
+    public T top() {
         return this.values[0];
     }
 
-    public int[] getValues() {
+    public T[] getValues() {
         return values;
     }
 

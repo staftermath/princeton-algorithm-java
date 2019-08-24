@@ -1,4 +1,4 @@
-public class MinPQ extends MaxPQ {
+public class MinPQ<T extends Comparable<T>> extends MaxPQ {
     public MinPQ(int capacity) {
         super (capacity);
     }

@@ -1,15 +1,15 @@
 
 
-public class MaxPQ extends PriorityQueue {
-    int[] pq = null;
+public class MaxPQ<T extends Comparable<T>> extends PriorityQueue {
+    T[] pq = null;
 
     public MaxPQ(int capacity) {
         super(capacity);
-        pq = new int[capacity+1];
+        pq = (T[]) new Comparable[capacity+1];
     }
 
     void exchange(int i, int j) {
-        int temp = this.pq[j];
+        T temp = this.pq[j];
         this.pq[j] = this.pq[i];
         this.pq[i] = temp;
     }
@@ -33,21 +33,21 @@ public class MaxPQ extends PriorityQueue {
     }
 
     @Override
-    public void insert(int x) throws QueueFullException {
+    public void insert(Comparable x) throws QueueFullException {
         if (this.n == capacity) throw new QueueFullException();
-        this.pq[++this.n] = x;
+        this.pq[++this.n] = (T)x;
         this.swim(this.n);
     }
 
     @Override
-    public int top() throws QueueEmptyException {
+    public T top() throws QueueEmptyException {
         if (this.isEmpty()) throw new QueueEmptyException();
         return this.pq[1];
     }
 
     @Override
-    public int popTop() throws QueueEmptyException {
-        int top = this.top();
+    public T popTop() throws QueueEmptyException {
+        T top = this.top();
         this.exchange(1, this.n--);
         this.sink(1);
         return top;
@@ -55,7 +55,7 @@ public class MaxPQ extends PriorityQueue {
 
     @Override
     public boolean less(int i, int j) {
-        return this.pq[i] < this.pq[j];
+        return this.pq[i].compareTo(this.pq[j]) < 0;
     }
 
 }

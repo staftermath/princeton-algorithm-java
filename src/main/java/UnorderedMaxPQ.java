@@ -1,22 +1,22 @@
+import java.util.Comparator;
 
-
-public class UnorderedMaxPQ extends PriorityQueue {
-    int[] pq = null;
+public class UnorderedMaxPQ<T extends Comparable<T>> extends PriorityQueue {
+    T[] pq = null;
 
     public UnorderedMaxPQ(int capacity) {
         super (capacity);
-        this.pq = new int[capacity+1];
+        this.pq = (T[]) new Comparator[capacity+1];
     }
 
     @Override
-    public void insert(int x) throws QueueFullException{
+    public void insert(Comparable x) throws QueueFullException{
         if (this.n >= this.capacity) throw new QueueFullException("Capacity is full");
-        this.pq[++this.n] = x;
+        this.pq[++this.n] = (T) x;
     }
 
     @Override
     void exchange(int i, int j) {
-        int temp = this.pq[i];
+        T temp = this.pq[i];
         this.pq[i] = this.pq[j];
         this.pq[j] = temp;
     }
@@ -33,12 +33,12 @@ public class UnorderedMaxPQ extends PriorityQueue {
     }
 
     @Override
-    public int top() throws QueueEmptyException {
+    public T top() throws QueueEmptyException {
         return this.pq[this.getMaxIndex()];
     }
 
     @Override
-    public int popTop() throws QueueEmptyException {
+    public T popTop() throws QueueEmptyException {
         int maxIdx = this.getMaxIndex();
         this.exchange(maxIdx, this.n);
         return this.pq[this.n--];
@@ -46,7 +46,7 @@ public class UnorderedMaxPQ extends PriorityQueue {
 
     @Override
     public boolean less(int i, int j) {
-        return this.pq[i] < this.pq[j];
+        return this.pq[i].compareTo(this.pq[j]) < 0;
     }
 }
 
