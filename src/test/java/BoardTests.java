@@ -12,7 +12,7 @@ public class BoardTests {
     private int[][] tilesNoRightNeighbor = {{1, 2, 3}, {5, 4, 0}, {6, 7, 8}};
     private int[][] tilesNoUpperNeighbor = {{1, 0, 2}, {3, 4, 5}, {6, 7, 8}};
     private int[][] tilesNoLowerNeighbor = {{1, 7, 2}, {3, 4, 5}, {6, 0, 8}};
-    private int[][] tilesHasAllNeighbor = {{1, 2, 3}, {3, 0, 5}, {6, 4, 8}};
+    private int[][] tilesHasAllNeighbor = {{1, 2, 3}, {5, 0, 7}, {6, 4, 8}};
     private Board boardNoLeftNeighbor = new Board(tilesNoLeftNeighbor);
     private Board boardNoRightNeighbor = new Board(tilesNoRightNeighbor);
     private Board boardNoUpperNeighbor = new Board(tilesNoUpperNeighbor);
@@ -56,5 +56,19 @@ public class BoardTests {
         Assert.assertEquals(noLeftNeighbors.get(0), new Board(rightNeighbor));
         Assert.assertEquals(noLeftNeighbors.get(1), new Board(upperNeighbor));
         Assert.assertEquals(noLeftNeighbors.get(2), new Board(lowerNeighbor));
-        }
+    }
+
+    @Test
+    public void testIsSolvable() {
+        Assert.assertTrue(boardGoal.isSolvable());
+        Assert.assertFalse(boardNoRightNeighbor.isSolvable());
+        Assert.assertTrue(boardHasAllNeighbor.isSolvable());
+        int[][] tile4by4Solvable = {{1, 2, 3, 4}, {5, 6, 0, 8}, {9, 10, 7, 11}, {13, 14, 15, 12}};
+        Board board4by4Solvable = new Board(tile4by4Solvable);
+        Assert.assertTrue(board4by4Solvable.isSolvable());
+        int[][] tile4by4Unsolvable = {{2, 1, 3, 4}, {5, 6, 0, 8}, {9, 10, 7, 11}, {13, 14, 15, 12}};
+        Board board4by4Unsolvable = new Board(tile4by4Unsolvable);
+        Assert.assertFalse(board4by4Unsolvable.isSolvable());
+    }
+
 }

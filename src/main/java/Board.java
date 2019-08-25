@@ -1,10 +1,12 @@
-import cucumber.api.java.it.Ma;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Board {
+public class Board implements Comparable<Board> {
     int[][] tiles = null;
+    private int manhattan = -1;
+    private int hamming = -1;
     Board(int[][] tiles) {
         if (tiles.length == 0 || tiles[0].length == 0) {
             System.out.println("Tiles are empty.");
@@ -15,6 +17,8 @@ public class Board {
             System.exit(1);
         }
         this.tiles = tiles;
+        this.manhattan = this.manhattan();
+        this.hamming = this.hamming();
     }
 
     @Override
@@ -27,6 +31,7 @@ public class Board {
     }
 
     public int hamming() {
+        if (this.hamming != -1) return this.hamming;
         int distance = 0;
         int maxDistance = this.tiles.length*this.tiles.length;
         for (int i=0; i<maxDistance-1; i++) {
@@ -37,6 +42,7 @@ public class Board {
     }
 
     public int manhattan() {
+        if (this.manhattan != -1) return this.manhattan;
         int distance = 0;
         int maxDistance = this.tiles.length*this.tiles.length;
         int thisTile, row, col;
@@ -51,6 +57,13 @@ public class Board {
     }
 
     public boolean isGoal() { return this.hamming() == 0;}
+
+    @Override
+    public int compareTo(Board o) {
+        if (this.hamming() < o.hamming()) return -1;
+        else if (this.hamming() > o.hamming()) return 1;
+        return 0;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -88,7 +101,32 @@ public class Board {
         return list;
     }
 
-    public boolean isSolvable() {return false;}
+    private int numberOfFlip() {
+        /*
+        TODO: can I do better than O(n^2)?
+         */
+        int numberOfFlip = 0;
+        int length = this.tiles.length;
+        int col1, row1, col2, row2;
+        for (int i=0; i<length*length-1; i++) {
+            row1 = i/length;
+            col1 = i%length;
+            if (this.tiles[row1][col1] == 0) continue;
+            for (int j=i+1; j<length*length; j++) {
+                row2 = j/length;
+                col2 = j%length;
+                if (this.tiles[row2][col2] != 0 && this.tiles[row1][col1] > this.tiles[row2][col2]) numberOfFlip++;
+            }
+        }
+        return numberOfFlip;
+    }
+
+    public boolean isSolvable() {
+        if (this.tiles.length % 2 == 1) return this.numberOfFlip()%2==0;
+        else {
+            return (this.numberOfFlip()+this.getIndexOfZero()/this.tiles.length)%2==1;
+        }
+    }
 
     private int getIndexOfZero() {
         int maxDistance = this.tiles.length*this.tiles.length;
@@ -118,4 +156,11 @@ public class Board {
         arr[fromRow][fromCol] = temp;
     }
 
+    public int getHamming() {
+        return hamming;
+    }
+
+    public int getManhattan() {
+        return manhattan;
+    }
 }
