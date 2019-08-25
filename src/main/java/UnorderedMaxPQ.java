@@ -5,13 +5,13 @@ public class UnorderedMaxPQ<T extends Comparable<T>> extends PriorityQueue {
 
     public UnorderedMaxPQ(int capacity) {
         super (capacity);
-        this.pq = (T[]) new Comparator[capacity+1];
+        this.pq = (T[]) new Comparable[capacity];
     }
 
     @Override
     public void insert(Comparable x) throws QueueFullException{
         if (this.n >= this.capacity) throw new QueueFullException("Capacity is full");
-        this.pq[++this.n] = (T) x;
+        this.pq[this.n++] = (T) x;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class UnorderedMaxPQ<T extends Comparable<T>> extends PriorityQueue {
     private int getMaxIndex() throws QueueEmptyException {
         if (this.isEmpty()) throw new QueueEmptyException("Queue is empty");
         int maxIdx=0;
-        for (int i=1; i<=this.n; i++) {
+        for (int i=1; i<this.n; i++) {
             if (this.less(maxIdx, i)) {
                 maxIdx = i;
             }
@@ -40,8 +40,8 @@ public class UnorderedMaxPQ<T extends Comparable<T>> extends PriorityQueue {
     @Override
     public T popTop() throws QueueEmptyException {
         int maxIdx = this.getMaxIndex();
-        this.exchange(maxIdx, this.n);
-        return this.pq[this.n--];
+        this.exchange(maxIdx, --this.n);
+        return this.pq[this.n];
     }
 
     @Override
