@@ -27,6 +27,10 @@ public class GraphTests {
         Assert.assertEquals(0, Graph.numberOfSelfLoops(graph));
         graph.addEdge(0, 0);
         Assert.assertEquals(1, Graph.numberOfSelfLoops(graph));
+        graph.deleteEdge(0, 0);
+        Assert.assertEquals(0, Graph.numberOfSelfLoops(graph));
+        graph.deleteEdge(2, 0);
+        Assert.assertEquals(2, Graph.degree(graph, 2));
     }
 
 

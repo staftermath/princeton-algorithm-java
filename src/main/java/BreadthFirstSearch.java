@@ -45,7 +45,7 @@ public class BreadthFirstSearch {
         return this.marked[v];
     }
 
-    private Iterable<Integer> pathTo(int v) {
+    public Iterable<Integer> pathTo(int v) {
         if (!marked[v]) return null;
         Stack<Integer> stack = new Stack<>();
         for (int i=v; i!=this.s; i=edgeTo[i]) {
