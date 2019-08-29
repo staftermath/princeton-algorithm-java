@@ -4,7 +4,7 @@ import java.util.*;
 
 public class WordNet {
     HashMap<Integer, String> idMap = new HashMap<>();
-    HashMap<String, Integer> nouns = new HashMap<>();
+    HashMap<String, HashSet<Integer>> nouns = new HashMap<>();
     Digraph wordnet;
     int root;
 
@@ -23,7 +23,8 @@ public class WordNet {
             id = Integer.parseInt(lineItems[0]);
             this.idMap.put(id, lineItems[1]);
             for (String syn: lineItems[1].split(" ")) {
-                nouns.put(syn, id);
+                if (!nouns.containsKey(syn)) nouns.put(syn, new HashSet<>());
+                nouns.get(syn).add(id);
             }
         }
 
@@ -31,14 +32,12 @@ public class WordNet {
         wordnet = new Digraph(idMap.size());
         inputStream = new Scanner(new FileInputStream(hypernyms));
         int child;
-        boolean hasRoot = false;
         while (inputStream.hasNext()) {
             thisLine = inputStream.nextLine();
             lineItems = thisLine.split(",");
             child = Integer.parseInt(lineItems[0]);
             if (lineItems.length == 1) {
                 root = Integer.parseInt(lineItems[0]);
-                hasRoot = true;
             }
             else {
                 for (int i=1; i<lineItems.length; i++) {
@@ -46,7 +45,12 @@ public class WordNet {
                 }
             }
         }
-        if (!hasRoot) throw new IllegalArgumentException("Input has no root DAG.");
+        for (int i : wordnet.E.keySet()) {
+            if (!wordnet.E.containsKey(i)) {
+                this.root = i;
+                return;
+            }
+        }
     }
 
     public Iterable<String> nouns() {
@@ -60,25 +64,55 @@ public class WordNet {
 
     public int distance(String nounA, String nounB) {
         if (nounA == null || nounB == null || !isNoun(nounA) || !isNoun(nounB)) throw new IllegalArgumentException();
-        String sap = this.sap(nounA, nounB);
-        return this.getLevelDifference(sap, nounA) + this.getLevelDifference(sap, nounB);
+        HashSet<Integer> idSetA = this.nouns.get(nounA);
+        HashSet<Integer> idSetB = this.nouns.get(nounB);
+        int distance = this.wordnet.V();
+        for (Integer idB: idSetB) {
+            BreadthFirstSearch bfs = new BreadthFirstSearch(this.wordnet, idB);
+            for (Integer idA: idSetB) {
+                int sap = this.sap(idA, bfs);
+                int thisDistance = this.getLevelDifference(sap, idB) + this.getLevelDifference(sap, idA);
+                if (thisDistance < distance) distance = thisDistance;
+            }
+        }
+        return distance;
     }
 
     public String sap(String nounA, String nounB) {
         if (nounA == null || nounB == null || !isNoun(nounA) || !isNoun(nounB)) throw new IllegalArgumentException();
-        int start = this.nouns.get(nounB);
-        BreadthFirstSearch bfs = new BreadthFirstSearch(this.wordnet, start);
-        HashSet<Integer> visited = new HashSet<>();
-        Deque queue = new Deque();
-        queue.addFirst(this.nouns.get(nounA));
-        while (!queue.empty()) {
-            int top = queue.popFirst();
-            for (Integer hyper: this.wordnet.adj(top)) {
-                if (bfs.hasPathTo(hyper)) return this.idMap.get(top);
-                queue.addLast(hyper);
+        HashSet<Integer> idSetA = this.nouns.get(nounA);
+        HashSet<Integer> idSetB = this.nouns.get(nounB);
+        int sap = this.root;
+        int distance = wordnet.V();
+        for (Integer idB: idSetB) {
+            BreadthFirstSearch bfs = new BreadthFirstSearch(this.wordnet, idB);
+            for (Integer idA: idSetB) {
+                int thisSap = this.sap(idA, bfs);
+                int thisDistance = this.getLevelDifference(thisSap, idA) + this.getLevelDifference(thisSap, idB);
+                if (distance > thisDistance) {
+                    sap = thisSap;
+                    distance = thisDistance;
+                }
             }
         }
-        return null;
+        return this.idMap.get(sap);
+    }
+
+    private Integer sap(int idA, BreadthFirstSearch bfs) {
+        if (bfs.hasPathTo(idA)) return idA;
+        Deque queue = new Deque();
+        queue.addFirst(idA);
+        while (!queue.empty()) {
+            int size = queue.size();
+            for (int i=0; i<size; i++) {
+                int top = queue.popFirst();
+                for (Integer n: this.wordnet.adj(top)) {
+                    if (bfs.hasPathTo(n)) return n;
+                    else queue.addLast(n);
+                }
+            }
+        }
+        return -1;
     }
 
     private int getLevelDifference(Integer higher, Integer lower) {
@@ -100,11 +134,5 @@ public class WordNet {
             }
         }
         return -1;
-    }
-
-    private int getLevelDifference(String higher, String lower) {
-        Integer higherId = this.nouns.get(higher);
-        Integer lowerId = this.nouns.get(lower);
-        return this.getLevelDifference(higherId, lowerId);
     }
 }
