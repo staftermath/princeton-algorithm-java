@@ -10,9 +10,7 @@ public class BreadthFirstSearch {
         this.marked = new boolean[G.V()];
         this.edgeTo = new int[G.V()];
         this.s = s;
-        if (G.E.containsKey(s)) {
-            bfs(G, s, s);
-        }
+        bfs(G, s, s);
     }
 
     /**
@@ -45,7 +43,7 @@ public class BreadthFirstSearch {
         return this.marked[v];
     }
 
-    private Iterable<Integer> pathTo(int v) {
+    public Iterable<Integer> pathTo(int v) {
         if (!marked[v]) return null;
         Stack<Integer> stack = new Stack<>();
         for (int i=v; i!=this.s; i=edgeTo[i]) {

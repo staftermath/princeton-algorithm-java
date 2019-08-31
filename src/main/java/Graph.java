@@ -32,6 +32,14 @@ public class Graph {
         this.E.get(w).add(v);
     }
 
+    public boolean deleteEdge(int v, int w) {
+        if (!this.E.containsKey(v)) return false;
+        int index = this.E.get(v).indexOf(w);
+        if (index == -1) return false;
+        this.E.get(v).remove(index);
+        return true;
+    }
+
     public Iterable<Integer> adj(int v) {
         return this.E.getOrDefault(v, new ArrayList<Integer>());
     }

@@ -21,4 +21,13 @@ public class Digraph extends Graph {
         }
         return reversed;
     }
+
+    @Override
+    public int E() {
+        int e = 0;
+        for (Integer i: this.E.keySet()) {
+            e += this.E.get(i).size();
+        }
+        return e;
+    }
 }
