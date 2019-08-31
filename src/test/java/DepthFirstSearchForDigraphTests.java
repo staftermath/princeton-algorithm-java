@@ -19,13 +19,7 @@ public class DepthFirstSearchForDigraphTests {
         LOGGER.info("Setting Up");
         this.graph = new Digraph(11);
         int[] edges = {0, 1, 0, 2, 0, 6, 0, 5, 5, 3, 3, 4, 4, 6, 4, 5, 7, 8, 9, 10};
-<<<<<<< HEAD
         this.addEdges(graph, edges);
-=======
-        for (int i = 1; i < edges.length; i += 2) {
-            this.graph.addEdge(edges[i - 1], edges[i]);
-        }
->>>>>>> master
     }
 
     @ParameterizedTest
@@ -61,7 +55,6 @@ public class DepthFirstSearchForDigraphTests {
         assertTrue(dfsHasCycle.hasCycle());
         Graph graphWithNoCycle = new Graph(11);
         int[] edges = {0, 1, 0, 2, 0, 6, 0, 5, 5, 3, 3, 4, 7, 8, 9, 10};
-<<<<<<< HEAD
         this.addEdges(graphWithNoCycle, edges);
         DepthFirstSearch dfsNoCycle = new DepthFirstSearch(graphWithNoCycle, 0);
         assertFalse(dfsNoCycle.hasCycle());
@@ -82,12 +75,5 @@ public class DepthFirstSearchForDigraphTests {
         DepthFirstSearch dfs = new DepthFirstSearch(graph, 0);
         assertTrue(dfs.hasPathTo(0));
         assertFalse(dfs.hasPathTo(3));
-=======
-        for (int i = 1; i < edges.length; i += 2) {
-            graphWithNoCycle.addEdge(edges[i - 1], edges[i]);
-        }
-        DepthFirstSearch dfsNoCycle = new DepthFirstSearch(graphWithNoCycle, 0);
-        assertFalse(dfsNoCycle.hasCycle());
->>>>>>> master
     }
 }
