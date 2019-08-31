@@ -10,9 +10,7 @@ public class BreadthFirstSearch {
         this.marked = new boolean[G.V()];
         this.edgeTo = new int[G.V()];
         this.s = s;
-        if (G.E.containsKey(s)) {
-            bfs(G, s, s);
-        }
+        bfs(G, s, s);
     }
 
     /**

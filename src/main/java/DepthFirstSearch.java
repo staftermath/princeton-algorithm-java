@@ -16,9 +16,7 @@ public class DepthFirstSearch extends Search {
         source = s;
         marked = new boolean[graph.V()];
         edgeTo = new int[graph.V()];
-        if (graph.E.containsKey(s)) {
-            dfs(graph, s, s);
-        }
+        dfs(graph, s, s);
     }
 
     @Override

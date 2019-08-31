@@ -1,6 +1,7 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class WordNet {
     HashMap<Integer, String> idMap = new HashMap<>();
@@ -69,7 +70,7 @@ public class WordNet {
         int distance = this.wordnet.V();
         for (Integer idB: idSetB) {
             BreadthFirstSearch bfs = new BreadthFirstSearch(this.wordnet, idB);
-            for (Integer idA: idSetB) {
+            for (Integer idA: idSetA) {
                 int sap = this.sap(idA, bfs);
                 int thisDistance = this.getLevelDifference(sap, idB) + this.getLevelDifference(sap, idA);
                 if (thisDistance < distance) distance = thisDistance;
@@ -86,7 +87,7 @@ public class WordNet {
         int distance = wordnet.V();
         for (Integer idB: idSetB) {
             BreadthFirstSearch bfs = new BreadthFirstSearch(this.wordnet, idB);
-            for (Integer idA: idSetB) {
+            for (Integer idA: idSetA) {
                 int thisSap = this.sap(idA, bfs);
                 int thisDistance = this.getLevelDifference(thisSap, idA) + this.getLevelDifference(thisSap, idB);
                 if (distance > thisDistance) {
@@ -116,10 +117,9 @@ public class WordNet {
     }
 
     private int getLevelDifference(Integer higher, Integer lower) {
-        if (higher.equals(lower)) return 0;
         LinkedList<Integer> queue = new LinkedList<>();
         queue.add(lower);
-        int distance = 0;
+        int distance = -1;
         while (!queue.isEmpty()) {
             int size = queue.size();
             distance++;
@@ -134,5 +134,25 @@ public class WordNet {
             }
         }
         return -1;
+    }
+
+    public static void main(String[] args) {
+        String synsets = args[0];
+        String hypernms = args[1];
+        String word1 = args[2];
+        String word2 = args[3];
+        Logger LOGGER = Logger.getLogger("BFS Test Log");
+        WordNet wordNet;
+        try {
+            wordNet = new WordNet(synsets, hypernms);
+            String sap = wordNet.sap(word1, word2);
+            int distance = wordNet.distance(word1, word2);
+            LOGGER.info(String.format("SAP: %s \n distance: %d", sap, distance));
+        }
+        catch (FileNotFoundException e) {
+            LOGGER.warning(e.toString());
+            System.exit(1);
+        }
+
     }
 }
