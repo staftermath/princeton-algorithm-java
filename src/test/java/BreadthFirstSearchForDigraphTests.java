@@ -17,6 +17,7 @@ public class BreadthFirstSearchForDigraphTests {
     public void setUp() {
         this.graph = new Digraph(11);
         int[] edges = {0, 1, 0, 2, 0, 6, 0, 5, 5, 3, 3, 4, 4, 6, 4, 5, 7, 8, 9, 10};
+<<<<<<< HEAD
         this.addEdges(this.graph, edges);
 //        for (int i = 1; i < edges.length; i += 2) {
 //            this.graph.addEdge(edges[i - 1], edges[i]);
@@ -40,6 +41,13 @@ public class BreadthFirstSearchForDigraphTests {
         assertFalse(bfs.hasPathTo(3));
     }
 
+=======
+        for (int i = 1; i < edges.length; i += 2) {
+            this.graph.addEdge(edges[i - 1], edges[i]);
+        }
+    }
+
+>>>>>>> master
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5, 6})
     public void testHasPathToReturnTrue(int vertex) {
