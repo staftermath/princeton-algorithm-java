@@ -12,6 +12,14 @@ public class EdgeWeightedGraph {
         }
     }
 
+    public int V() {
+        return this.V;
+    }
+
+    public int E() {
+        return this.E;
+    }
+
     public void addEdge(Edge e) {
         int v = e.either();
         int w = e.other(v);
