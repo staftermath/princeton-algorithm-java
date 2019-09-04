@@ -1,6 +1,7 @@
 import gherkin.lexer.Ar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.PriorityQueue;
 
 public class SP {
@@ -62,6 +63,7 @@ public class SP {
             to = this.edgeTo[to.from()];
             result.add(to);
         }
+        Collections.reverse(result);
         return result;
     }
 }
